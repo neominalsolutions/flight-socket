@@ -2,6 +2,7 @@ import { useContext } from 'react';
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { FlightContext, FlightContextType } from '../contexts/FlightContext';
+import Countdown from 'react-countdown';
 
 function ArrivalsPage() {
 	const { state } = useContext(FlightContext) as FlightContextType;
@@ -13,8 +14,19 @@ function ArrivalsPage() {
 			width: 150,
 			filterable: false,
 			renderCell(params: any) {
-				console.log('params', params);
-				return <a>{params.row.Origin.Code}</a>;
+				return (
+					// bir saat boyunca çalışacak sayfa yenilenmez ise
+					<Countdown
+						date={Date.now() + 60000}
+						renderer={(props) =>
+							props.seconds % 2 === 0 ? (
+								<>{params.row.Origin.Code}</>
+							) : (
+								<> Previos</>
+							)
+						}
+					/>
+				);
 			},
 		},
 		{
