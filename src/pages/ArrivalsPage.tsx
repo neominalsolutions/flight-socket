@@ -1,11 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import {
-	FlightContextType,
-	ArrivalsContext,
-} from '../contexts/ArrivalsContext';
+import { FlightContextType, FlightContext } from '../contexts/FlightContext';
 
 function ArrivalsPage() {
-	const { state } = useContext(ArrivalsContext) as FlightContextType;
+	const { state } = useContext(FlightContext) as FlightContextType;
 
 	return (
 		<div style={{ padding: '10px' }}>

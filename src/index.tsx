@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import ArrivalContextProvider from './contexts/ArrivalsContext';
+import FlightContextProvider from './contexts/FlightContext';
 import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
@@ -11,11 +11,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
 	<React.StrictMode>
-		<ArrivalContextProvider>
+		<FlightContextProvider>
 			<BrowserRouter>
 				<App />
 			</BrowserRouter>
-		</ArrivalContextProvider>
+		</FlightContextProvider>
 	</React.StrictMode>
 );
 

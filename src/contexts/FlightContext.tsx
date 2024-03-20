@@ -10,6 +10,7 @@ export type FlightContextType = {
 	addItem: (item: any, type: FlightType) => void;
 	deleteItem: (id: number, type: FlightType) => void;
 	updateItem: (item: any, type: FlightType) => void;
+	init: (data: any[], type: FlightType) => void;
 };
 
 interface FlightState {
@@ -17,13 +18,21 @@ interface FlightState {
 	departures: any[];
 }
 
-export const ArrivalsContext = createContext<FlightContextType | null>(null);
+export const FlightContext = createContext<FlightContextType | null>(null);
 
-const ArrivalContextProvider = ({ children }: any) => {
+const FlightContextProvider = ({ children }: any) => {
 	const [state, setState] = useState<FlightState>({
 		arrivals: [],
 		departures: [],
 	});
+
+	const init = (data: any[], type: FlightType) => {
+		if (type === FlightType.arrival) {
+			state.arrivals = [...data];
+
+			setState({ ...state });
+		}
+	};
 
 	const addItem = (item: any, type: FlightType) => {
 		if (type === FlightType.arrival) {
@@ -72,13 +81,11 @@ const ArrivalContextProvider = ({ children }: any) => {
 		}
 	};
 
-	const values = { addItem, updateItem, deleteItem, state };
+	const values = { init, addItem, updateItem, deleteItem, state };
 
 	return (
-		<ArrivalsContext.Provider value={values}>
-			{children}
-		</ArrivalsContext.Provider>
+		<FlightContext.Provider value={values}>{children}</FlightContext.Provider>
 	);
 };
 
-export default ArrivalContextProvider;
+export default FlightContextProvider;
