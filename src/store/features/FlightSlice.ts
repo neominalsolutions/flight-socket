@@ -18,6 +18,7 @@ interface PayloadState {
 
 export interface ArrivalFlight {
 	Origin: any;
+	Previous: any;
 	FlightNumber: string;
 	Status: string;
 	Id: number;
