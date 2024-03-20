@@ -1,52 +1,73 @@
 import { createContext, useState } from 'react';
 
-export type ArrivalContextType = {
-	state: ArrivalState;
-	addItem: (item: any) => void;
-	deleteItem: (id: number) => void;
-	updateItem: (item: any) => void;
-};
-
-interface ArrivalState {
-	arrivals: any[];
+export enum FlightType {
+	arrival = 'arrival',
+	departure = 'departure',
 }
 
-export const ArrivalsContext = createContext<ArrivalContextType | null>(null);
+export type FlightContextType = {
+	state: FlightState;
+	addItem: (item: any, type: FlightType) => void;
+	deleteItem: (id: number, type: FlightType) => void;
+	updateItem: (item: any, type: FlightType) => void;
+};
+
+interface FlightState {
+	arrivals: any[];
+	departures: any[];
+}
+
+export const ArrivalsContext = createContext<FlightContextType | null>(null);
 
 const ArrivalContextProvider = ({ children }: any) => {
-	const [state, setState] = useState<ArrivalState>({ arrivals: [] });
+	const [state, setState] = useState<FlightState>({
+		arrivals: [],
+		departures: [],
+	});
 
-	const addItem = (item: any) => {
-		const exists = state.arrivals.find((x) => x.id === item.id);
-		if (!exists) {
-			state.arrivals = [...state.arrivals, item];
+	const addItem = (item: any, type: FlightType) => {
+		if (type === FlightType.arrival) {
+			const exists = state.arrivals.find((x) => x.Id === item.Id);
+			// state böyle bir bilgisi yoksa ekle
+			if (!exists) {
+				state.arrivals = [...state.arrivals, item];
+				setState({ ...state });
+				console.log('record is not exists');
+			}
+		}
+	};
+
+	const deleteItem = (Id: number, type: FlightType) => {
+		// state böyle bir bilgi var ve delete olarak event geliyorsa sil
+		if (type === FlightType.arrival) {
+			const filteredItems = state.arrivals.filter((x) => x.Id !== Id);
+			state.arrivals = [...filteredItems];
 			setState({ ...state });
 		}
 	};
 
-	const deleteItem = (id: number) => {
-		const filteredItems = state.arrivals.filter((x) => x.id !== id);
-		state.arrivals = [...filteredItems];
-		setState({ ...state });
-	};
+	const updateItem = (item: any, type: FlightType) => {
+		if (type === FlightType.arrival) {
+			if (state.arrivals) {
+				const exists = state.arrivals.find((x) => x.Id === item.Id);
 
-	const updateItem = (item: any) => {
-		if (state.arrivals) {
-			const exists = state.arrivals.find((x) => x.id === item.id);
+				// elimizde böyle bir kayıt varsa
 
-			if (exists) {
-				const _arrivals = state.arrivals.map((record: any) => {
-					if (record.id === item.id) {
-						console.log('record', record);
-						return item;
-					} else {
-						return record;
-					}
-				});
+				if (exists) {
+					const _arrivals = state.arrivals.map((record: any) => {
+						if (record.Id === item.Id) {
+							return item; // güncel olanı döndür
+						} else {
+							return record; // eski datayı döndür.
+						}
+					});
 
-				state.arrivals = [..._arrivals];
+					state.arrivals = [..._arrivals];
 
-				setState({ ...state });
+					setState({ ...state });
+				} else {
+					addItem(item, type);
+				}
 			}
 		}
 	};
