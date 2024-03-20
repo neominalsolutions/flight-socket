@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { ReduxFlightState } from '../store/features/FlightSlice';
+import { ArrivalFlight, ReduxFlightState } from '../store/features/FlightSlice';
 import { RootState } from '../store/store';
 
 function ReduxArrivalsPage() {
@@ -11,7 +11,7 @@ function ReduxArrivalsPage() {
 	return (
 		<div style={{ padding: '10px' }}>
 			{state.arrivals &&
-				state.arrivals.map((item: any) => {
+				state.arrivals.map((item: ArrivalFlight) => {
 					return (
 						<div key={item.Id}>
 							<div>

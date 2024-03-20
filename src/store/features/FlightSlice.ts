@@ -11,12 +11,27 @@ const initialState: ReduxFlightState = {
 	departures: [],
 };
 
+interface PayloadState {
+	ArrivalFlight: ArrivalFlight;
+	FlightType: string;
+}
+
+export interface ArrivalFlight {
+	Origin: any;
+	FlightNumber: string;
+	Status: string;
+	Id: number;
+}
+
 // FLIGHT_INSERT
 const flightSlice = createSlice({
 	name: 'FLIGHT',
 	initialState: initialState,
 	reducers: {
-		insertItem: (state: ReduxFlightState, action: PayloadAction<any>) => {
+		insertItem: (
+			state: ReduxFlightState,
+			action: PayloadAction<PayloadState>
+		) => {
 			console.log('payload', action.payload);
 			if (action.payload.FlightType === FlightType.arrival) {
 				const exists = state.arrivals.find(
