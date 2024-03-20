@@ -11,6 +11,7 @@ function OnRequest(config: InternalAxiosRequestConfig) {
 	// her bir request de araya girer ve request header access token eklediğimiz kod
 
 	const token = localStorage.getItem('access_token');
+	console.log('token', token);
 
 	if (token) {
 		config.headers['Authorization'] = `Bearer ${token}`;

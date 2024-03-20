@@ -5,17 +5,21 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import FlightContextProvider from './contexts/FlightContext';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
 );
 root.render(
 	<React.StrictMode>
-		<FlightContextProvider>
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
-		</FlightContextProvider>
+		<Provider store={store}>
+			<FlightContextProvider>
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
+			</FlightContextProvider>
+		</Provider>
 	</React.StrictMode>
 );
 

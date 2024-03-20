@@ -9,20 +9,22 @@ import { Link, useRoutes } from 'react-router-dom';
 import ArrivalsPage from './pages/ArrivalsPage';
 import DeparturesPage from './pages/DeparturesPage';
 import useArrivalFlights from './hooks/UseArrivalFlights';
+import UseReduxArrivalFlights from './hooks/UseReduxArrivalFlights';
+import ReduxArrivalsPage from './pages/ReduxArrivalsPage';
 
 function App() {
-	localStorage.setItem(
-		'access_token',
-		'aekArS0RlnYsFSCKrFgW/COP+5vIC7QShKsCoNz+7cQLrL6rFJMcM56U/3ZNQNOe293nxlNWg4m/2dZCSK4pNqD/PUCuXRHGKzbvg+v9Q0CeiquWL4y0hnynHC0AjBjbijQGsJqqHMVTflocWj8+z6aJ3qOBG02JujRAPeTxzcAZzTznbffjdwSEmHkYWsmMezU2hOJi2Wn4lEimMOh/TWGQkpz62BTJEKmR43XTDk2B88/QEHNVes2wMzJLf5pa'
-	);
-
 	const socket = new WebSocket('ws:195.175.26.178:8080');
-	const { state } = useArrivalFlights(socket);
+	// const { state } = useArrivalFlights(socket);
 	// const {state1} = useDepartureFlight(socket);
+	const { state } = UseReduxArrivalFlights(socket);
 	const routes = useRoutes([
 		{
 			path: 'arrivals',
 			Component: ArrivalsPage,
+		},
+		{
+			path: 'redux-arrivals',
+			Component: ReduxArrivalsPage,
 		},
 		{
 			path: 'departures',
@@ -33,6 +35,7 @@ function App() {
 	return (
 		<>
 			<Link to="/arrivals">Arrivals</Link>{' '}
+			<Link to="/redux-arrivals">Redux Arrivals</Link>{' '}
 			<Link to="/departures">Departures</Link>
 			{routes}
 		</>
