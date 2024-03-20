@@ -7,6 +7,7 @@ import FlightContextProvider from './contexts/FlightContext';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store/store';
+import '@fontsource/roboto/300.css';
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
@@ -31,6 +32,6 @@ reportWebVitals();
 // build işlemi
 // grid material ui
 // moment
-// i18n 
+// i18n
 // lodash
 // useNavigate();

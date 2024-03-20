@@ -1,27 +1,73 @@
-import React, { useContext, useEffect } from 'react';
-import { FlightContextType, FlightContext } from '../contexts/FlightContext';
+import { useContext } from 'react';
+
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { FlightContext, FlightContextType } from '../contexts/FlightContext';
 
 function ArrivalsPage() {
 	const { state } = useContext(FlightContext) as FlightContextType;
 
+	const columns: GridColDef[] = [
+		{
+			field: 'Code',
+			headerName: 'Code',
+			width: 150,
+			filterable: false,
+			renderCell(params: any) {
+				console.log('params', params);
+				return <a>{params.row.Origin.Code}</a>;
+			},
+		},
+		{
+			field: 'FlightNumber',
+			headerName: 'FlightNumber',
+			width: 150,
+			filterable: true,
+		},
+		{ field: 'Status', headerName: 'Status', width: 150, sortable: true },
+		// {
+		// 	field: 'Id',
+		// 	headerName: 'Id',
+		// 	width: 150,
+		// 	sortable: true,
+		// 	hideable: true,
+		// },
+	];
+
+	function getRowId(row: any) {
+		return row.Id;
+	}
+
 	return (
-		<div style={{ padding: '10px' }}>
-			{state.arrivals &&
-				state.arrivals.map((item: any) => {
-					return (
-						<div key={item.Id}>
-							<div>
-								Origin : {item.Origin.Code}
-								<br></br>
-								Flight Number: {item.FlightNumber}
-								<br></br>
-								Status : {item.Status}
-							</div>
-							<hr></hr>
-						</div>
-					);
-				})}
-		</div>
+		<DataGrid
+			getRowId={getRowId}
+			initialState={{
+				pagination: {
+					paginationModel: { pageSize: 5, page: 0 },
+				},
+			}}
+			columns={columns}
+			rows={state.arrivals}
+			// autoPageSize={true}
+			pageSizeOptions={[5, 10, 25, 50]}
+		/>
+		// <div style={{ padding: '10px' }}>
+		// 	{state.arrivals &&
+		// 		state.arrivals.map((item: any) => {
+		// 			return (
+		// 				<div key={item.Id}>
+		// 					<div>
+		// 						Origin : {item.Origin.Code}
+		// 						<br></br>
+		// 						Flight Number: {item.FlightNumber}
+		// 						<br></br>
+		// 						Status : {item.Status}
+		// 					</div>
+		// 					<Button variant="outlined">Deneme</Button>
+		// 					<hr></hr>
+		// 				</div>
+		// 			);
+		// 		})}
+		// </div>
 	);
 }
 
