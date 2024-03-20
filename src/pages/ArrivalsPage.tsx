@@ -17,12 +17,12 @@ function ArrivalsPage() {
 				return (
 					// bir saat boyunca çalışacak sayfa yenilenmez ise
 					<Countdown
-						date={Date.now() + 60000}
+						date={Date.now() + 360000}
 						renderer={(props) =>
 							props.seconds % 2 === 0 ? (
 								<>{params.row.Origin.Code}</>
 							) : (
-								<> Previos</>
+								<> Deneme </>
 							)
 						}
 					/>
