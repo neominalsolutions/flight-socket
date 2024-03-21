@@ -1,11 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FlightType } from '../contexts/FlightContext';
 import { SetupInterceptors } from '../networks/axiosSetup';
-import { RootDispatch } from '../store/store';
+import { RootDispatch, RootState } from '../store/store';
 import {
+	ReduxFlightState,
 	deleteItem,
+	fetchFlights,
 	insertItem,
 	updateItem,
 } from '../store/features/FlightSlice';
@@ -13,24 +15,25 @@ import {
 function UseReduxArrivalFlights(socket: WebSocket) {
 	// redux içerisinde state güncellemek için ise dispatch kullanılır
 	const dispatch = useDispatch<RootDispatch>();
-
-	const [arrivalState, setArrivalState] = useState();
-
-	const client = SetupInterceptors(
-		axios.create({
-			baseURL: 'https://testservice.antalya-airport.aero/api',
-			timeout: 3000,
-		})
-	);
+	const state = useSelector<RootState>(
+		(state) => state.flightState
+	) as ReduxFlightState;
 
 	useEffect(() => {
-		fetchData();
-
+		dispatch(fetchFlights());
+		// asenkron olarak veri çekip client state doldurduğumuz yer.
 		//195.175.26.178:8080
+
 		socket.onopen = onConnection;
 		socket.onmessage = onMessageRecieved;
 		socket.onclose = onClose;
 	}, []);
+
+	useEffect(() => {
+		if (state.fetched) {
+			alert('Veri Yüklendi');
+		}
+	}, [state.fetched]);
 
 	const onMessageRecieved = (evt: any) => {
 		// socketten verile json string olarak gelir.
@@ -58,21 +61,8 @@ function UseReduxArrivalFlights(socket: WebSocket) {
 		console.log('Connection is closed...');
 	};
 
-	// arrivals verisini çek state güncelle
-	const fetchData = () => {
-		// const token = localStorage.getItem('access_token');
-		client
-			.post('/flightlayout/ArrivalFlights', { Std: new Date() })
-			.then((response: AxiosResponse) => {
-				// Promise Resolve Veri geldi.
-				console.log('data', response);
-				// init(response.data.ArrivalFlights, FlightType.arrival);
-				setArrivalState(response.data.ArrivalFlights);
-			});
-	};
-
 	return {
-		state: arrivalState,
+		state,
 	};
 }
 

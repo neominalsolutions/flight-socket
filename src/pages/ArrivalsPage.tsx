@@ -19,7 +19,7 @@ function ArrivalsPage() {
 					<Countdown
 						date={Date.now() + 3600000}
 						renderer={(props) =>
-							props.seconds % 2 === 0 ? (
+							props.seconds % 3 === 0 ? (
 								<>{params.row.Origin.Code}</>
 							) : (
 								<> Deneme </>

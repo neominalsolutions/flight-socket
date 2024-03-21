@@ -14,9 +14,9 @@ import ReduxArrivalsPage from './pages/ReduxArrivalsPage';
 
 function App() {
 	const socket = new WebSocket('ws:195.175.26.178:8080');
-	const { state } = useArrivalFlights(socket);
+	// const { state } = useArrivalFlights(socket);
 	// const {state1} = useDepartureFlight(socket);
-	// const { state } = UseReduxArrivalFlights(socket);
+	const { state } = UseReduxArrivalFlights(socket);
 	const routes = useRoutes([
 		{
 			path: 'arrivals',

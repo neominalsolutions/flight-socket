@@ -1,14 +1,21 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { FlightType } from '../../contexts/FlightContext';
+import { airPortApi } from '../../networks/Client';
 
 export interface ReduxFlightState {
 	arrivals: any[];
 	departures: any[];
+	fetching: boolean; // veri çekildği state
+	fetched: boolean;
+	error: any;
 }
 
 const initialState: ReduxFlightState = {
 	arrivals: [],
 	departures: [],
+	fetching: false,
+	fetched: false,
+	error: {},
 };
 
 interface PayloadState {
@@ -24,11 +31,25 @@ export interface ArrivalFlight {
 	Id: number;
 }
 
+// redux ile asenkron state load edilmesi
+
+export const fetchFlights = createAsyncThunk('FETCH-FLIGHT', async () => {
+	return (
+		await airPortApi.post('/flightlayout/ArrivalFlights', {
+			Std: new Date(),
+		})
+	).data;
+});
+
+// ASENKRON VERI ÇEKTIĞIMIZDEN DOLAYI aşağı statelerde gezeriz.
+// Pending (Loading), Rejected (Reject), Fullfilled (Resolved)
+
 // FLIGHT_INSERT
 const flightSlice = createSlice({
 	name: 'FLIGHT',
 	initialState: initialState,
 	reducers: {
+		// senkron yani uygulama için client state burada çalışır
 		insertItem: (
 			state: ReduxFlightState,
 			action: PayloadAction<PayloadState>
@@ -79,6 +100,33 @@ const flightSlice = createSlice({
 				}
 			}
 		},
+	},
+	extraReducers(builder) {
+		// async state
+		builder.addCase(fetchFlights.pending, (state: ReduxFlightState) => {
+			// asenkron işlem ile ilgili o anki case göre state değiştiriyoruz
+			state.fetching = true;
+		});
+		builder.addCase(
+			fetchFlights.fulfilled,
+			(state: ReduxFlightState, action: PayloadAction<any>) => {
+				state.fetching = false;
+				state.fetched = true;
+
+				// console.log('data', action.payload.ArrivalFlights);
+
+				state.arrivals = [...action.payload.ArrivalFlights];
+			}
+		);
+		builder.addCase(
+			fetchFlights.rejected,
+			(state: ReduxFlightState, action: PayloadAction<any>) => {
+				state.fetched = false;
+				state.fetching = false;
+				state.arrivals = [];
+				state.error = action.payload; // hata payload
+			}
+		);
 	},
 });
 
